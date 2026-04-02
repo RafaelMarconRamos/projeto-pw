@@ -3,52 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MapaDosBem — Painel ONG</title>
+<title>MapaDosBem — Voluntário</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style> 
+<style>
   :root {
-    --bg:       #111410;
-    --panel:    #1A1D16;
-    --card:     #22261C;
-    --border:   #2E3228;
+    --cream:    #F5EFE0;
+    --warm:     #EAD9B8;
     --gold:     #C8933A;
     --gold-lt:  #E8B86D;
-    --forest:   #4A7A28;
-    --forest-lt:#5E9E32;
-    --cream:    #F0E8D0;
-    --muted:    #8A9080;
     --rust:     #B85C38;
-    --success:  #3A7A50;
-    --r:        12px;
+    --forest:   #2D5016;
+    --forest-lt:#3D6B20;
+    --charcoal: #1C1C1C;
+    --ink:      #2E2E2E;
+    --mist:     rgba(245,239,224,0.92);
+    --shadow:   0 8px 40px rgba(28,28,28,0.18);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--cream);
+    background: var(--cream);
+    color: var(--ink);
     height: 100vh;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    position: relative;
   }
 
   /* ── TOPBAR ── */
   .topbar {
-    height: 60px;
-    background: var(--panel);
-    border-bottom: 1px solid var(--border);
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 64px;
+    background: var(--charcoal);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 24px;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 100;
+    padding: 0 28px;
+    z-index: 1000;
+    border-bottom: 2px solid var(--gold);
   }
- 
+
   .brand {
     display: flex;
     align-items: center;
@@ -56,356 +53,61 @@
     text-decoration: none;
   }
   .brand-icon {
-    width: 34px; height: 34px;
+    width: 36px; height: 36px;
     background: var(--gold);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
+    font-size: 18px;
   }
   .brand-name {
     font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     color: var(--cream);
+    letter-spacing: 0.02em;
   }
   .brand-name span { color: var(--gold); }
 
-  .topbar-center {
-    position: absolute;
-    left: 50%; transform: translateX(-50%);
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
+  .nav-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
-  }
-  .topbar-center::before, .topbar-center::after {
-    content: '';
-    width: 30px; height: 1px;
-    background: var(--border);
-  }
-
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .ong-avatar {
-    width: 34px; height: 34px;
-    background: var(--card);
-    border: 2px solid var(--forest);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px;
-  }
-  .ong-info { text-align: right; }
-  .ong-info .name { font-size: 0.82rem; font-weight: 600; color: var(--cream); }
-  .ong-info .role { font-size: 0.7rem; color: var(--muted); }
-
-  .btn-logout {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.75rem;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-logout:hover { border-color: var(--rust); color: var(--rust); }
-
-  /* ── LAYOUT ── */
-  .workspace {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
-
-  /* ── SIDEBAR ── */
-  .sidebar {
-    width: 340px;
-    flex-shrink: 0;
-    background: var(--panel);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .sidebar-tabs {
-    display: flex;
-    border-bottom: 1px solid var(--border);
-  }
-  .tab-btn {
-    flex: 1;
-    padding: 13px 10px;
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-    margin-bottom: -1px;
-  }
-  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
-  .tab-btn:hover:not(.active) { color: var(--cream); }
-
-  .tab-panel { display: none; flex: 1; overflow-y: auto; flex-direction: column; }
-  .tab-panel.active { display: flex; }
-
-  /* ── FORM ── */
-  .form-wrap {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
     gap: 16px;
   }
 
-  .form-section {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .form-label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .form-input, .form-textarea, .form-select {
-    background: var(--card);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    color: var(--cream);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    padding: 10px 14px;
-    width: 100%;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .form-input:focus, .form-textarea:focus, .form-select:focus {
-    border-color: var(--gold);
-  }
-  .form-input::placeholder, .form-textarea::placeholder { color: var(--muted); }
-  .form-textarea { resize: vertical; min-height: 80px; }
-  .form-select option { background: var(--card); }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  /* ── MAP PICKER ── */
-  .map-picker-section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .map-picker-label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .map-picker-label .required { color: var(--rust); }
-
-  .map-picker-hint {
-    background: var(--card);
-    border: 1.5px dashed var(--forest);
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 0.78rem;
-    color: var(--forest-lt);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  /* ── SUBMIT BUTTON ── */
-  .btn-submit {
-    width: 100%;
+  .nav-badge {
     background: var(--forest);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    padding: 13px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.04em;
-    transition: all 0.25s;
-    margin-top: 4px;
-  }
-  .btn-submit:hover { background: var(--forest-lt); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(74,122,40,0.4); }
-
-  /* ── MISSION LIST ── */
-  .mission-list {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .mission-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 16px;
-    position: relative;
-    transition: border-color 0.2s;
-    cursor: pointer;
-  }
-  .mission-card:hover { border-color: var(--gold); }
-
-  .mc-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 20px;
-    margin-bottom: 8px;
-  }
-  .mc-status.active   { background: rgba(74,122,40,0.2); color: var(--forest-lt); }
-  .mc-status.inactive { background: rgba(138,144,128,0.2); color: var(--muted); }
-
-  .mc-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
     color: var(--cream);
-    margin-bottom: 4px;
-  }
-
-  .mc-meta {
-    font-size: 0.75rem;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-
-  .mc-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .mc-candidatos {
-    font-size: 0.75rem;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .mc-candidatos strong { color: var(--gold); }
-
-  .mc-actions {
-    display: flex;
-    gap: 6px;
-  }
-
-  .btn-sm {
-    padding: 5px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: none;
-    font-family: 'DM Sans', sans-serif;
     font-size: 0.72rem;
     font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--forest-lt);
+  }
+
+  .btn-login {
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    color: var(--gold);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 7px 18px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s;
-  }
-  .btn-sm.danger { color: var(--rust); border-color: var(--rust); }
-  .btn-sm.danger:hover { background: var(--rust); color: #fff; }
-  .btn-sm.view  { color: var(--gold); border-color: var(--gold); }
-  .btn-sm.view:hover { background: var(--gold); color: var(--bg); }
-
-  /* ── CANDIDATOS DRAWER ── */
-  .drawer {
-    position: fixed;
-    top: 60px; right: 0;
-    height: calc(100vh - 60px);
-    width: 320px;
-    background: var(--panel);
-    border-left: 1px solid var(--border);
-    transform: translateX(100%);
-    transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
-    z-index: 200;
-    display: flex;
-    flex-direction: column;
-  }
-  .drawer.open { transform: translateX(0); }
-
-  .drawer-header {
-    padding: 20px;
-    border-bottom: 1px solid var(--border);
-  }
-  .drawer-header h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    color: var(--cream);
-    margin-bottom: 4px;
-  }
-  .drawer-header p { font-size: 0.78rem; color: var(--muted); }
-  .drawer-close {
-    float: right;
-    background: none; border: none;
-    color: var(--muted); font-size: 1.2rem;
-    cursor: pointer; margin-top: -4px;
-    transition: color 0.2s;
-  }
-  .drawer-close:hover { color: var(--cream); }
-
-  .candidato-list { padding: 16px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-
-  .candidato-item {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px;
-    display: flex;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    display: inline-flex;
     align-items: center;
-    gap: 12px;
-    transition: border-color 0.2s;
   }
-  .candidato-item:hover { border-color: var(--gold); }
+  .btn-login:hover { background: var(--gold); color: var(--charcoal); }
 
-  .cand-avatar {
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--forest), var(--gold));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-  .cand-info .cand-name { font-size: 0.85rem; font-weight: 600; color: var(--cream); }
-  .cand-info .cand-email { font-size: 0.72rem; color: var(--muted); }
-
-  /* ── MAIN MAP AREA ── */
-  .map-main {
-    flex: 1;
-    position: relative;
+  /* ── MAP CONTAINER ── */
+  .map-wrapper {
+    position: fixed;
+    top: 64px; left: 0;
+    width: 100%; height: calc(100vh - 64px);
     overflow: hidden;
   }
 
@@ -414,11 +116,10 @@
     width: 100%;
     height: 100%;
     position: relative;
-    background: #1a1f14;
+    background: #e8e0cc;
     overflow: hidden;
   }
 
-  /* Road network SVG overlay effect */
   .map-illustration svg {
     position: absolute;
     inset: 0;
@@ -426,18 +127,20 @@
     height: 100%;
   }
 
-  /* Map grid background */
+  /* Light grid overlay */
   .map-illustration::before {
     content: '';
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(74,122,40,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(74,122,40,0.06) 1px, transparent 1px);
-    background-size: 48px 48px;
+      linear-gradient(rgba(45,80,22,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(45,80,22,0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
     z-index: 0;
+    pointer-events: none;
   }
 
+  /* ── MAP PINS ── */
   .map-pin {
     position: absolute;
     z-index: 2;
@@ -448,34 +151,43 @@
     transform: translateX(-50%);
     animation: pinDrop 0.6s cubic-bezier(0.22,1,0.36,1) both;
   }
-  .map-pin:nth-child(2) { animation-delay: 0.1s; }
-  .map-pin:nth-child(3) { animation-delay: 0.2s; }
-  .map-pin:nth-child(4) { animation-delay: 0.3s; }
+  .map-pin:nth-child(2) { animation-delay: 0.12s; }
+  .map-pin:nth-child(3) { animation-delay: 0.22s; }
+  .map-pin:nth-child(4) { animation-delay: 0.32s; }
+  .map-pin:nth-child(5) { animation-delay: 0.42s; }
+  .map-pin:nth-child(6) { animation-delay: 0.52s; }
 
   @keyframes pinDrop {
-    from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    from { opacity: 0; transform: translateX(-50%) translateY(-24px); }
     to   { opacity: 1; transform: translateX(-50%) translateY(0); }
   }
 
   .pin-head {
-    width: 38px; height: 38px;
+    width: 40px; height: 40px;
     border-radius: 50% 50% 50% 0;
     transform: rotate(-45deg);
-    border: 2px solid rgba(255,255,255,0.25);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+    border: 3px solid #fff;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
     display: flex; align-items: center; justify-content: center;
     position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .map-pin:hover .pin-head {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    transform: rotate(-45deg) scale(1.1);
   }
   .pin-head span {
     transform: rotate(45deg);
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1;
   }
-  .pin-head.green  { background: #4A7A28; }
-  .pin-head.grey   { background: #555; }
+  .pin-head.forest  { background: #2D5016; }
+  .pin-head.goldbg  { background: #C8933A; }
+  .pin-head.greyed  { background: #aaaaaa; }
+
   .pin-shadow {
     width: 10px; height: 4px;
-    background: rgba(0,0,0,0.35);
+    background: rgba(0,0,0,0.2);
     border-radius: 50%;
     margin-top: 2px;
     filter: blur(2px);
@@ -484,503 +196,666 @@
   .pin-pulse-ring {
     position: absolute;
     top: 50%; left: 50%;
-    transform: translate(-50%, -50%) rotate(45deg);
-    width: 54px; height: 54px;
+    width: 56px; height: 56px;
     border-radius: 50% 50% 50% 0;
-    border: 2px solid rgba(74,122,40,0.5);
-    animation: pinPulse 2s ease-out infinite;
+    border: 2px solid rgba(45,80,22,0.4);
+    animation: pinPulse 2.2s ease-out infinite;
+    pointer-events: none;
+    transform-origin: center center;
   }
   @keyframes pinPulse {
     0%   { transform: translate(-50%,-50%) rotate(45deg) scale(1); opacity: 0.7; }
-    100% { transform: translate(-50%,-50%) rotate(45deg) scale(1.8); opacity: 0; }
+    100% { transform: translate(-50%,-50%) rotate(45deg) scale(1.9); opacity: 0; }
   }
 
-  /* ── MAP OVERLAY UI ── */
-  .map-instructions {
-    position: absolute;
-    top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(17,20,16,0.88);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    padding: 10px 20px;
-    font-size: 0.8rem;
-    color: var(--muted);
-    z-index: 10;
+  /* ── SEARCH BAR ── */
+  .search-bar {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 500;
+    animation: fadeInDown 0.7s 0.3s both;
+  }
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .search-input-wrap {
     display: flex;
     align-items: center;
+    background: var(--mist);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--warm);
+    border-radius: 30px;
+    padding: 0 16px 0 20px;
+    box-shadow: var(--shadow);
+    height: 44px;
     gap: 8px;
-    pointer-events: none;
-    white-space: nowrap;
+    width: 240px;
   }
-  .pulse-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--muted);
-    flex-shrink: 0;
+  .search-input-wrap input {
+    background: none;
+    border: none;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--ink);
+    width: 100%;
+  }
+  .search-input-wrap input::placeholder { color: #aaa; }
+  .search-icon { color: var(--gold); font-size: 1rem; }
+
+  /* ── SIDE PANEL ── */
+  .side-panel {
+    position: fixed;
+    top: 80px;
+    left: 20px;
+    width: 300px;
+    background: var(--mist);
+    backdrop-filter: blur(16px);
+    border-radius: 16px;
+    border: 1px solid var(--warm);
+    padding: 24px;
+    z-index: 500;
+    box-shadow: var(--shadow);
+    animation: slideIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-30px); }
+    to   { opacity: 1; transform: translateX(0); }
   }
 
-  .map-zoom-label {
-    position: absolute;
-    bottom: 30px;
-    left: 16px;
-    background: rgba(17,20,16,0.82);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 0.72rem;
-    color: var(--muted);
-    z-index: 10;
-    line-height: 1.6;
+  .side-panel h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--charcoal);
+    margin-bottom: 6px;
+  }
+  .side-panel p {
+    font-size: 0.82rem;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 18px;
   }
 
-  .map-zoom-controls {
-    position: absolute;
-    bottom: 30px;
-    right: 16px;
-    z-index: 10;
+  .legend {
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--border);
+    gap: 10px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    flex-shrink: 0;
+  }
+  .dot-active   { background: var(--forest); }
+  .dot-full     { background: var(--gold); }
+  .dot-inactive { background: #aaa; }
+
+  .stat-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .stat-box {
+    flex: 1;
+    background: var(--charcoal);
+    color: var(--cream);
+    border-radius: 10px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+  .stat-box .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--gold);
+    display: block;
+  }
+  .stat-box .lbl {
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(28,28,28,0.55);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--cream);
+    border-radius: 20px;
+    width: 420px;
+    max-width: 90vw;
+    padding: 36px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    border-top: 4px solid var(--gold);
+    transform: scale(0.92) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+  }
+  .modal-overlay.open .modal { transform: scale(1) translateY(0); }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 20px;
+    background: none; border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: #aaa;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--rust); }
+
+  .modal-tag {
+    display: inline-block;
+    background: var(--forest);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+
+  .modal h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.55rem;
+    color: var(--charcoal);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .modal-org {
+    font-size: 0.8rem;
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .modal-desc {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: #555;
+    margin-bottom: 22px;
+    border-left: 3px solid var(--warm);
+    padding-left: 14px;
+  }
+
+  .modal-meta {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .meta-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--warm);
     border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 0.78rem;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .meta-chip .icon { font-size: 1rem; }
+
+  .btn-candidatar {
+    width: 100%;
+    background: var(--forest);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: all 0.25s;
+    position: relative;
     overflow: hidden;
   }
-  .map-zoom-btn {
-    background: var(--card);
-    border: none;
-    color: var(--cream);
-    width: 32px; height: 32px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.2s;
-    border-bottom: 1px solid var(--border);
+  .btn-candidatar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.12));
+    transform: translateX(-100%);
+    transition: transform 0.4s;
   }
-  .map-zoom-btn:last-child { border-bottom: none; }
-  .map-zoom-btn:hover { background: var(--border); }
+  .btn-candidatar:hover { background: var(--forest-lt); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(45,80,22,0.35); }
+  .btn-candidatar:hover::after { transform: translateX(100%); }
 
   /* ── TOAST ── */
   .toast {
     position: fixed;
-    bottom: 28px;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%) translateY(80px);
-    background: var(--success);
-    color: #fff;
-    padding: 12px 26px;
+    background: var(--charcoal);
+    color: var(--cream);
+    padding: 14px 28px;
     border-radius: 30px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    z-index: 9999;
-    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+    font-size: 0.88rem;
+    font-weight: 500;
+    z-index: 3000;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    border-left: 4px solid var(--gold);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     white-space: nowrap;
     pointer-events: none;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
 
-  /* scrollbar */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
   /* ── RESPONSIVE ── */
-  @media (max-width: 900px) {
+  @media (max-width: 860px) {
     body { overflow: auto; height: auto; }
 
-    .workspace { flex-direction: column; overflow: visible; }
-
-    .sidebar {
-      width: 100%;
-      height: auto;
-      border-right: none;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .tab-panel { max-height: none; overflow: visible; }
-
-    .map-main {
+    .map-wrapper {
+      position: relative;
+      top: 64px;
       height: 60vw;
       min-height: 320px;
       max-height: 480px;
-      flex: none;
     }
 
-    .drawer {
-      width: 100%;
+    .side-panel {
+      position: fixed;
       top: auto;
       bottom: 0;
-      height: 70vh;
-      border-left: none;
-      border-top: 1px solid var(--border);
-      transform: translateY(100%);
+      left: 0;
+      right: 0;
+      width: 100%;
+      border-radius: 20px 20px 0 0;
+      border: none;
+      border-top: 1px solid var(--warm);
+      padding: 20px;
+      flex-direction: row;
+      gap: 16px;
     }
-    .drawer.open { transform: translateY(0); }
 
-    .topbar-center { display: none; }
+    .side-panel h2,
+    .side-panel > p { display: none; }
 
-    .ong-info { display: none; }
+    .legend { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+    .stat-row { margin-top: 0; }
+
+    .search-bar {
+      top: 76px;
+      right: 10px;
+    }
+    .search-input-wrap { width: 200px; }
   }
 
-  @media (max-width: 520px) {
-    .topbar { padding: 0 16px; gap: 8px; }
-    .brand-name { font-size: 1rem; }
+  @media (max-width: 560px) {
+    .topbar { padding: 0 16px; }
+    .brand-name { font-size: 1.05rem; }
+    .nav-badge { display: none; }
+    .btn-login { font-size: 0.75rem; padding: 6px 12px; }
 
-    .form-row { grid-template-columns: 1fr; }
+    .side-panel {
+      flex-direction: column;
+      gap: 10px;
+      padding: 16px;
+    }
+    .legend { display: none; }
+    .stat-row { margin-top: 0; }
 
-    .map-main { height: 56vw; min-height: 260px; }
+    .search-bar { right: 8px; }
+    .search-input-wrap { width: 170px; }
 
-    .mission-list { padding: 12px; }
-
-    .drawer { height: 80vh; }
+    .modal { padding: 24px 20px; }
+    .modal h3 { font-size: 1.3rem; }
   }
-
-  /* ── TAB SWITCHING (CSS only trick) ── */
-  #tab-nova-trigger:checked ~ .workspace .tab-panel#tab-nova { display: flex; }
-  #tab-nova-trigger:checked ~ .workspace .tab-panel#tab-missoes { display: none; }
-  #tab-missoes-trigger:checked ~ .workspace .tab-panel#tab-nova { display: none; }
-  #tab-missoes-trigger:checked ~ .workspace .tab-panel#tab-missoes { display: flex; }
 </style>
 </head>
 <body>
 
 <!-- TOPBAR -->
 <header class="topbar">
-  <div class="brand">
+  <a class="brand" href="#">
     <div class="brand-icon">🤝</div>
     <span class="brand-name">Mapa<span>DosBem</span></span>
-  </div>
-  <div class="topbar-center">
-    <span>Painel da ONG</span>
-  </div>
-  <div class="topbar-right">
-    <div class="ong-info">
-      <div class="name">ONG Pão &amp; Amor</div>
-      <div class="role">Administrador</div>
-    </div>
-    <div class="ong-avatar">🌱</div>
-    <button class="btn-logout">Sair</button>
+  </a>
+  <div class="nav-actions">
+    <span class="nav-badge">🌱 Área do Voluntário</span>
+    <a class="btn-login" href="ong-painel.html">Sou uma ONG →</a>
   </div>
 </header>
 
-<!-- WORKSPACE -->
-<div class="workspace">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-tabs">
-      <button class="tab-btn active" onclick="switchTab('nova', this)">+ Nova Missão</button>
-      <button class="tab-btn" onclick="switchTab('missoes', this)">Minhas Missões</button>
-    </div>
-
-    <!-- TAB: NOVA MISSÃO -->
-    <div class="tab-panel active" id="tab-nova">
-      <div class="form-wrap">
-
-        <div style="margin-bottom:4px;">
-          <h2 style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--cream);margin-bottom:4px;">Cadastrar Nova Missão</h2>
-          <p style="font-size:0.75rem;color:var(--muted);line-height:1.5;">Preencha os dados e clique no mapa para definir o local exato da ação.</p>
-        </div>
-
-        <div class="form-section">
-          <label class="form-label">Título da Missão</label>
-          <input class="form-input" type="text" placeholder="Ex: Distribuição de alimentos…">
-        </div>
-
-        <div class="form-section">
-          <label class="form-label">Descrição</label>
-          <textarea class="form-textarea" placeholder="Descreva a atividade, o que é necessário e o perfil do voluntário ideal…"></textarea>
-        </div>
-
-        <div class="form-row">
-          <div class="form-section">
-            <label class="form-label">Data</label>
-            <input class="form-input" type="date">
-          </div>
-          <div class="form-section">
-            <label class="form-label">Horário</label>
-            <input class="form-input" type="time">
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-section">
-            <label class="form-label">Vagas</label>
-            <input class="form-input" type="number" min="1" placeholder="Ex: 10">
-          </div>
-          <div class="form-section">
-            <label class="form-label">Categoria</label>
-            <select class="form-select">
-              <option value="">Selecione…</option>
-              <option>Alimentação</option>
-              <option>Educação</option>
-              <option>Meio Ambiente</option>
-              <option>Saúde</option>
-              <option>Idosos</option>
-              <option>Animais</option>
-              <option>Outro</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- MAP PICKER HINT -->
-        <div class="map-picker-section">
-          <div class="map-picker-label">
-            Localização da Missão <span class="required">*</span>
-          </div>
-          <div class="map-picker-hint">
-            <span>📍</span>
-            <span>Clique em qualquer ponto do mapa ao lado para marcar o local da ação.</span>
-          </div>
-        </div>
-
-        <button class="btn-submit">Publicar Missão no Mapa</button>
-
-      </div>
-    </div>
-
-    <!-- TAB: MINHAS MISSÕES -->
-    <div class="tab-panel" id="tab-missoes">
-      <div class="mission-list">
-
-        <div class="mission-card" onclick="openDrawer()">
-          <div class="mc-status active">🟢 Ativa</div>
-          <div class="mc-title">Distribuição de Quentinhas</div>
-          <div class="mc-meta">Alimentação &nbsp;·&nbsp; 2025-07-12 &nbsp;·&nbsp; 10 vagas</div>
-          <div class="mc-footer">
-            <div class="mc-candidatos">👥 <strong>3</strong> candidatos</div>
-            <div class="mc-actions">
-              <button class="btn-sm view" onclick="openDrawer()">Ver</button>
-              <button class="btn-sm danger">Encerrar</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="mission-card">
-          <div class="mc-status active">🟢 Ativa</div>
-          <div class="mc-title">Limpeza do Parque Ecológico</div>
-          <div class="mc-meta">Meio Ambiente &nbsp;·&nbsp; 2025-07-13 &nbsp;·&nbsp; 25 vagas</div>
-          <div class="mc-footer">
-            <div class="mc-candidatos">👥 <strong>2</strong> candidatos</div>
-            <div class="mc-actions">
-              <button class="btn-sm view">Ver</button>
-              <button class="btn-sm danger">Encerrar</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="mission-card">
-          <div class="mc-status inactive">⚫ Encerrada</div>
-          <div class="mc-title">Visita ao Lar dos Idosos</div>
-          <div class="mc-meta">Idosos &nbsp;·&nbsp; 2025-07-05 &nbsp;·&nbsp; 15 vagas</div>
-          <div class="mc-footer">
-            <div class="mc-candidatos">👥 <strong>0</strong> candidatos</div>
-            <div class="mc-actions">
-              <button class="btn-sm view">Ver</button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </aside>
-
-  <!-- MAIN MAP (ILLUSTRATIVE) -->
-  <main class="map-main">
-
-    <div class="map-instructions">
-      <div class="pulse-dot"></div>
-      <span>Clique no mapa para posicionar sua missão</span>
-    </div>
-
-    <div class="map-zoom-label">
-      🔍 Use o scroll ou os botões<br>para navegar no mapa
-    </div>
-
-    <div class="map-zoom-controls">
-      <button class="map-zoom-btn">+</button>
-      <button class="map-zoom-btn">−</button>
-    </div>
-
-    <!-- ILLUSTRATIVE MAP -->
-    <div class="map-illustration">
-      <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-
-        <!-- Base terrain blocks -->
-        <rect width="900" height="600" fill="#1a1f14"/>
-
-        <!-- Blocks / neighborhoods -->
-        <rect x="60" y="40" width="120" height="80" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-        <rect x="200" y="30" width="160" height="100" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-        <rect x="380" y="20" width="140" height="120" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-        <rect x="540" y="40" width="180" height="90" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-        <rect x="740" y="30" width="130" height="110" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-
-        <rect x="40" y="160" width="100" height="140" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-        <rect x="160" y="150" width="180" height="120" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-        <rect x="360" y="160" width="120" height="130" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-        <rect x="500" y="150" width="200" height="140" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-        <rect x="720" y="170" width="150" height="120" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-
-        <rect x="50" y="330" width="160" height="100" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-        <rect x="230" y="310" width="140" height="130" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-        <rect x="390" y="320" width="200" height="110" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-        <rect x="610" y="310" width="130" height="140" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-        <rect x="760" y="330" width="110" height="120" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-
-        <rect x="60" y="460" width="190" height="100" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-        <rect x="270" y="450" width="170" height="110" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-        <rect x="460" y="460" width="150" height="100" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-        <rect x="630" y="470" width="200" height="90" rx="4" fill="#1f2419" stroke="#2a3020" stroke-width="1"/>
-
-        <!-- Park area -->
-        <rect x="490" y="155" width="8" height="128" rx="1" fill="#243318"/>
-        <rect x="502" y="150" width="200" height="140" rx="6" fill="#1e2d12" stroke="#2d4a18" stroke-width="1.5"/>
-        <circle cx="540" cy="185" r="12" fill="#223110" opacity="0.8"/>
-        <circle cx="560" cy="175" r="9" fill="#243514" opacity="0.7"/>
-        <circle cx="580" cy="188" r="11" fill="#1e2c0f" opacity="0.8"/>
-        <circle cx="605" cy="178" r="13" fill="#253413" opacity="0.7"/>
-        <circle cx="630" cy="190" r="10" fill="#203010" opacity="0.8"/>
-        <circle cx="650" cy="175" r="8" fill="#273815" opacity="0.6"/>
-        <circle cx="670" cy="188" r="12" fill="#1e2c0f" opacity="0.7"/>
-        <circle cx="545" cy="215" r="9" fill="#223110" opacity="0.6"/>
-        <circle cx="570" cy="225" r="11" fill="#253413" opacity="0.7"/>
-        <circle cx="595" cy="215" r="8" fill="#1e2c0f" opacity="0.6"/>
-        <circle cx="620" cy="228" r="12" fill="#223110" opacity="0.7"/>
-        <circle cx="648" cy="218" r="9" fill="#253413" opacity="0.6"/>
-
-        <!-- Roads - horizontal -->
-        <rect x="0" y="130" width="900" height="18" fill="#222b1a"/>
-        <rect x="0" y="290" width="900" height="18" fill="#222b1a"/>
-        <rect x="0" y="440" width="900" height="18" fill="#222b1a"/>
-
-        <!-- Roads - vertical -->
-        <rect x="150" y="0" width="18" height="600" fill="#222b1a"/>
-        <rect x="360" y="0" width="18" height="600" fill="#222b1a"/>
-        <rect x="500" y="0" width="18" height="600" fill="#222b1a"/>
-        <rect x="720" y="0" width="18" height="600" fill="#222b1a"/>
-
-        <!-- Road lane dashes - horizontal -->
-        <line x1="0" y1="139" x2="900" y2="139" stroke="#2e3a22" stroke-width="1" stroke-dasharray="20,14"/>
-        <line x1="0" y1="299" x2="900" y2="299" stroke="#2e3a22" stroke-width="1" stroke-dasharray="20,14"/>
-        <line x1="0" y1="449" x2="900" y2="449" stroke="#2e3a22" stroke-width="1" stroke-dasharray="20,14"/>
-
-        <!-- Road lane dashes - vertical -->
-        <line x1="159" y1="0" x2="159" y2="600" stroke="#2e3a22" stroke-width="1" stroke-dasharray="20,14"/>
-        <line x1="369" y1="0" x2="369" y2="600" stroke="#2e3a22" stroke-width="1" stroke-dasharray="20,14"/>
-        <line x1="509" y1="0" x2="509" y2="600" stroke="#2e3a22" stroke-width="1" stroke-dasharray="20,14"/>
-        <line x1="729" y1="0" x2="729" y2="600" stroke="#2e3a22" stroke-width="1" stroke-dasharray="20,14"/>
-
-        <!-- Smaller inner roads -->
-        <rect x="0" y="200" width="500" height="10" fill="#1e2618" opacity="0.8"/>
-        <rect x="0" y="370" width="900" height="10" fill="#1e2618" opacity="0.8"/>
-        <rect x="260" y="0" width="10" height="600" fill="#1e2618" opacity="0.8"/>
-        <rect x="620" y="0" width="10" height="600" fill="#1e2618" opacity="0.8"/>
-
-        <!-- River / water feature -->
-        <path d="M0,500 Q150,480 300,510 Q450,540 600,500 Q750,460 900,490 L900,560 Q750,540 600,575 Q450,600 300,565 Q150,540 0,560Z" fill="#18201a" opacity="0.9"/>
-        <path d="M0,510 Q200,495 400,520 Q600,545 900,505" stroke="#1e2d22" stroke-width="2" fill="none" opacity="0.6"/>
-
-        <!-- Building details -->
-        <rect x="75" y="52" width="20" height="16" rx="1" fill="#243018" opacity="0.6"/>
-        <rect x="100" y="48" width="30" height="20" rx="1" fill="#243018" opacity="0.5"/>
-        <rect x="140" y="56" width="25" height="14" rx="1" fill="#243018" opacity="0.6"/>
-
-        <!-- Subtle overlay gradient -->
-        <radialGradient id="centerGlow" cx="50%" cy="48%" r="45%">
-          <stop offset="0%" stop-color="#4A7A28" stop-opacity="0.04"/>
-          <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
-        </radialGradient>
-        <rect width="900" height="600" fill="url(#centerGlow)"/>
-
-      </svg>
-
-      <!-- MAP PINS -->
-      <!-- Pin 1 - Active green -->
-      <div class="map-pin" style="left:37%;top:38%;">
-        <div class="pin-head green">
-          <div class="pin-pulse-ring"></div>
-          <span>🌱</span>
-        </div>
-        <div class="pin-shadow"></div>
-      </div>
-
-      <!-- Pin 2 - Active green (park) -->
-      <div class="map-pin" style="left:62%;top:30%;">
-        <div class="pin-head green">
-          <div class="pin-pulse-ring" style="animation-delay:0.7s;"></div>
-          <span>🌱</span>
-        </div>
-        <div class="pin-shadow"></div>
-      </div>
-
-      <!-- Pin 3 - Inactive -->
-      <div class="map-pin" style="left:24%;top:55%;">
-        <div class="pin-head grey">
-          <span>💤</span>
-        </div>
-        <div class="pin-shadow"></div>
-      </div>
-
-    </div>
-    <!-- /map-illustration -->
-
-  </main>
+<!-- SEARCH BAR -->
+<div class="search-bar">
+  <div class="search-input-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Buscar missões...">
+  </div>
 </div>
 
-<!-- DRAWER: CANDIDATOS -->
-<div class="drawer" id="drawer">
-  <div class="drawer-header">
-    <button class="drawer-close" onclick="closeDrawer()">✕</button>
-    <h3>Distribuição de Quentinhas</h3>
-    <p>3 candidato(s) · 10 vagas</p>
+<!-- MAP -->
+<div class="map-wrapper">
+  <div class="map-illustration">
+
+    <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <!-- Base -->
+      <rect width="900" height="600" fill="#e8e0cc"/>
+
+      <!-- Terrain/blocks -->
+      <rect x="0" y="0" width="900" height="600" fill="#ede5ce"/>
+
+      <!-- Large park area -->
+      <rect x="380" y="180" width="220" height="160" rx="10" fill="#d4e8c2"/>
+      <circle cx="420" cy="220" r="18" fill="#c0dba8" opacity="0.8"/>
+      <circle cx="455" cy="208" r="14" fill="#b8d69e" opacity="0.7"/>
+      <circle cx="485" cy="225" r="20" fill="#c8e2b0" opacity="0.8"/>
+      <circle cx="520" cy="210" r="15" fill="#bcd9a4" opacity="0.7"/>
+      <circle cx="550" cy="228" r="18" fill="#c4dea8" opacity="0.8"/>
+      <circle cx="580" cy="215" r="12" fill="#b8d69e" opacity=" 0.6"/>
+      <circle cx="430" cy="265" r="16" fill="#c0dba8" opacity="0.7"/>
+      <circle cx="460" cy="280" r="20" fill="#c8e2b0" opacity="0.8"/>
+      <circle cx="500" cy="268" r="14" fill="#bcd9a4" opacity="0.6"/>
+      <circle cx="535" cy="280" r="18" fill="#c4dea8" opacity="0.7"/>
+      <circle cx="568" cy="266" r="12" fill="#b8d69e" opacity="0.6"/>
+      <!-- Park path -->
+      <path d="M395,250 Q450,240 500,255 Q550,270 590,255" stroke="#b0cd90" stroke-width="3" fill="none" stroke-dasharray="8,4"/>
+      <text x="465" y="318" font-family="sans-serif" font-size="10" fill="#7aac50" text-anchor="middle" opacity="0.7">Parque Ecológico</text>
+
+      <!-- Water / river -->
+      <path d="M0,510 Q100,495 250,515 Q400,535 550,510 Q700,485 900,500 L900,560 Q700,550 550,570 Q400,595 250,575 Q100,560 0,570Z" fill="#c8dcd0" opacity="0.7"/>
+      <path d="M0,520 Q200,508 400,528 Q600,548 900,515" stroke="#a8c8b8" stroke-width="2" fill="none" opacity="0.6"/>
+
+      <!-- City blocks -->
+      <rect x="40" y="30" width="110" height="80" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+      <rect x="170" y="25" width="155" height="95" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+      <rect x="620" y="30" width="160" height="90" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+      <rect x="800" y="20" width="90" height="110" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+
+      <rect x="30" y="150" width="120" height="130" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+      <rect x="170" y="160" width="190" height="110" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+      <rect x="620" y="160" width="140" height="120" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+      <rect x="780" y="150" width="110" height="140" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+
+      <rect x="40" y="320" width="160" height="110" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+      <rect x="220" y="310" width="140" height="130" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+      <rect x="620" y="310" width="130" height="140" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+      <rect x="770" y="320" width="120" height="130" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+
+      <rect x="50" y="460" width="180" height="90" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+      <rect x="250" y="455" width="110" height="95" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+      <rect x="630" y="455" width="150" height="90" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+      <rect x="800" y="460" width="90" height="80" rx="5" fill="#ddd5bc" stroke="#ccc4aa" stroke-width="1"/>
+
+      <!-- Building detail boxes -->
+      <rect x="55" y="42" width="22" height="18" rx="2" fill="#c8c0a8" opacity="0.5"/>
+      <rect x="82" y="38" width="35" height="22" rx="2" fill="#c8c0a8" opacity="0.4"/>
+      <rect x="122" y="44" width="18" height="16" rx="2" fill="#c8c0a8" opacity="0.5"/>
+      <rect x="185" y="36" width="28" height="20" rx="2" fill="#c8c0a8" opacity="0.4"/>
+      <rect x="220" y="32" width="40" height="24" rx="2" fill="#c8c0a8" opacity="0.5"/>
+      <rect x="270" y="38" width="30" height="18" rx="2" fill="#c8c0a8" opacity="0.4"/>
+
+      <!-- Main roads - horizontal -->
+      <rect x="0" y="120" width="900" height="22" fill="#d4c9ae"/>
+      <rect x="0" y="285" width="900" height="22" fill="#d4c9ae"/>
+      <rect x="0" y="440" width="900" height="22" fill="#d4c9ae"/>
+
+      <!-- Main roads - vertical -->
+      <rect x="150" y="0" width="18" height="600" fill="#d4c9ae"/>
+      <rect x="360" y="0" width="18" height="600" fill="#d4c9ae"/>
+      <rect x="600" y="0" width="18" height="600" fill="#d4c9ae"/>
+      <rect x="770" y="0" width="18" height="600" fill="#d4c9ae"/>
+
+      <!-- Road lane markings horizontal -->
+      <line x1="0" y1="131" x2="900" y2="131" stroke="#c8bda2" stroke-width="1.5" stroke-dasharray="22,15"/>
+      <line x1="0" y1="296" x2="900" y2="296" stroke="#c8bda2" stroke-width="1.5" stroke-dasharray="22,15"/>
+      <line x1="0" y1="451" x2="900" y2="451" stroke="#c8bda2" stroke-width="1.5" stroke-dasharray="22,15"/>
+
+      <!-- Road lane markings vertical -->
+      <line x1="159" y1="0" x2="159" y2="600" stroke="#c8bda2" stroke-width="1.5" stroke-dasharray="22,15"/>
+      <line x1="369" y1="0" x2="369" y2="600" stroke="#c8bda2" stroke-width="1.5" stroke-dasharray="22,15"/>
+      <line x1="609" y1="0" x2="609" y2="600" stroke="#c8bda2" stroke-width="1.5" stroke-dasharray="22,15"/>
+      <line x1="779" y1="0" x2="779" y2="600" stroke="#c8bda2" stroke-width="1.5" stroke-dasharray="22,15"/>
+
+      <!-- Secondary roads -->
+      <rect x="0" y="195" width="380" height="10" fill="#cfc4a8" opacity="0.8"/>
+      <rect x="0" y="390" width="900" height="10" fill="#cfc4a8" opacity="0.8"/>
+      <rect x="260" y="0" width="10" height="600" fill="#cfc4a8" opacity="0.8"/>
+      <rect x="680" y="0" width="10" height="600" fill="#cfc4a8" opacity="0.8"/>
+
+      <!-- Map scale indicator -->
+      <rect x="820" y="540" width="60" height="3" fill="#b0a890"/>
+      <line x1="820" y1="536" x2="820" y2="546" stroke="#b0a890" stroke-width="1.5"/>
+      <line x1="880" y1="536" x2="880" y2="546" stroke="#b0a890" stroke-width="1.5"/>
+      <text x="850" y="558" font-family="sans-serif" font-size="9" fill="#9a9078" text-anchor="middle">500m</text>
+
+      <!-- Compass -->
+      <circle cx="855" cy="490" r="18" fill="white" fill-opacity="0.6" stroke="#c8bda2" stroke-width="1"/>
+      <text x="855" y="478" font-family="sans-serif" font-size="10" fill="#2D5016" text-anchor="middle" font-weight="700">N</text>
+      <path d="M855,482 L852,498 L855,494 L858,498Z" fill="#2D5016"/>
+      <path d="M855,482 L852,498 L855,494 L858,498Z" fill="#aaa" transform="rotate(180,855,490)"/>
+
+    </svg>
+
+    <!-- MAP PINS -->
+    <!-- Pin 1: Distribuição de Quentinhas - Active -->
+    <div class="map-pin" style="left:38%;top:40%;" onclick="openModal(0)">
+      <div class="pin-head forest">
+        <div class="pin-pulse-ring"></div>
+        <span>🌱</span>
+      </div>
+      <div class="pin-shadow"></div>
+    </div>
+
+    <!-- Pin 2: Limpeza do Parque - Active (park area) -->
+    <div class="map-pin" style="left:56%;top:34%;" onclick="openModal(1)">
+      <div class="pin-head forest">
+        <div class="pin-pulse-ring" style="animation-delay:0.8s;"></div>
+        <span>🌱</span>
+      </div>
+      <div class="pin-shadow"></div>
+    </div>
+
+    <!-- Pin 3: Aulas de Reforço - Full/gold -->
+    <div class="map-pin" style="left:68%;top:55%;" onclick="openModal(2)">
+      <div class="pin-head goldbg">
+        <div class="pin-pulse-ring" style="border-color:rgba(200,147,58,0.4);animation-delay:0.4s;"></div>
+        <span>🔥</span>
+      </div>
+      <div class="pin-shadow"></div>
+    </div>
+
+    <!-- Pin 4: Visita ao Lar - Active -->
+    <div class="map-pin" style="left:22%;top:58%;" onclick="openModal(3)">
+      <div class="pin-head forest">
+        <div class="pin-pulse-ring" style="animation-delay:1.2s;"></div>
+        <span>🌱</span>
+      </div>
+      <div class="pin-shadow"></div>
+    </div>
+
+    <!-- Pin 5: ONG inativa -->
+    <div class="map-pin" style="left:47%;top:65%;">
+      <div class="pin-head greyed">
+        <span>💤</span>
+      </div>
+      <div class="pin-shadow"></div>
+    </div>
+
+    <!-- Pin 6: Doação de Sangue - Active -->
+    <div class="map-pin" style="left:80%;top:42%;" onclick="openModal(4)">
+      <div class="pin-head forest">
+        <div class="pin-pulse-ring" style="animation-delay:0.6s;"></div>
+        <span>🌱</span>
+      </div>
+      <div class="pin-shadow"></div>
+    </div>
+
   </div>
-  <div class="candidato-list">
-    <div class="candidato-item">
-      <div class="cand-avatar">👩</div>
-      <div class="cand-info">
-        <div class="cand-name">Ana Souza</div>
-        <div class="cand-email">ana@email.com</div>
-      </div>
+</div>
+
+<!-- SIDE PANEL -->
+<aside class="side-panel">
+  <h2>Missões Ativas</h2>
+  <p>Clique nos pins do mapa para ver os detalhes de cada ação e se candidatar.</p>
+
+  <div class="legend">
+    <div class="legend-item"><span class="dot dot-active"></span> Missão com vagas</div>
+    <div class="legend-item"><span class="dot dot-full"></span> Quase sem vagas</div>
+    <div class="legend-item"><span class="dot dot-inactive"></span> ONG sem ações ativas</div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <span class="num">12</span>
+      <span class="lbl">Missões</span>
     </div>
-    <div class="candidato-item">
-      <div class="cand-avatar">👨</div>
-      <div class="cand-info">
-        <div class="cand-name">Carlos Lima</div>
-        <div class="cand-email">carlos@email.com</div>
-      </div>
+    <div class="stat-box">
+      <span class="num">4</span>
+      <span class="lbl">ONGs</span>
     </div>
-    <div class="candidato-item">
-      <div class="cand-avatar">👩‍🦱</div>
-      <div class="cand-info">
-        <div class="cand-name">Fernanda R.</div>
-        <div class="cand-email">fern@email.com</div>
-      </div>
+    <div class="stat-box">
+      <span class="num">87</span>
+      <span class="lbl">Voluntários</span>
     </div>
+  </div>
+</aside>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    <span class="modal-tag" id="mTag">Missão Ativa</span>
+    <h3 id="mTitle">Título da Missão</h3>
+    <div class="modal-org" id="mOrg">🏢 Nome da ONG</div>
+    <p class="modal-desc" id="mDesc">Descrição da missão aparece aqui.</p>
+    <div class="modal-meta">
+      <div class="meta-chip"><span class="icon">📅</span><span id="mDate">Sábado, 12 Jul</span></div>
+      <div class="meta-chip"><span class="icon">👥</span><span id="mVagas">8 vagas</span></div>
+      <div class="meta-chip"><span class="icon">📍</span><span id="mLocal">Praça Central</span></div>
+    </div>
+    <button class="btn-candidatar" onclick="candidatar()">✋ Quero me Candidatar</button>
   </div>
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="toast">✅ Missão publicada com sucesso!</div>
+<div class="toast" id="toast">
+  ✅ Candidatura enviada! A ONG receberá seu contato por e-mail.
+</div>
 
 <script>
-  function switchTab(id, btn) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-' + id).classList.add('active');
+  const missions = [
+    {
+      title: 'Distribuição de Quentinhas',
+      org: 'ONG Pão & Amor',
+      desc: 'Precisamos de voluntários para ajudar na preparação e distribuição de refeições quentes para famílias em situação de vulnerabilidade no centro da cidade.',
+      date: 'Sábado, 12 Jul · 10h–14h',
+      vagas: '10 vagas',
+      local: 'Praça Matriz',
+      full: false
+    },
+    {
+      title: 'Limpeza do Parque Ecológico',
+      org: 'Instituto Verde Vivo',
+      desc: 'Mutirão de limpeza e plantio de mudas nativas no Parque Ecológico Municipal. Luvas e ferramentas serão fornecidas.',
+      date: 'Domingo, 13 Jul · 8h–12h',
+      vagas: '25 vagas',
+      local: 'Parque Ecológico',
+      full: false
+    },
+    {
+      title: 'Aulas de Reforço Escolar',
+      org: 'Educação pra Todos',
+      desc: 'Apoio educacional para crianças do 1º ao 5º ano. Buscamos voluntários com paciência e amor pelo ensino.',
+      date: 'Toda terça · 14h–17h',
+      vagas: '2 vagas restantes',
+      local: 'Escola Estadual N. Sra. Aparecida',
+      full: true
+    },
+    {
+      title: 'Visita ao Lar dos Idosos',
+      org: 'Abraço Fraterno',
+      desc: 'Levar alegria, conversar, fazer atividades recreativas e musicais com os residentes do lar. Uma tarde de carinho e afeto.',
+      date: 'Sábado, 19 Jul · 14h–17h',
+      vagas: '15 vagas',
+      local: 'Lar São Francisco',
+      full: false
+    },
+    {
+      title: 'Campanha de Doação de Sangue',
+      org: 'Saúde em Ação',
+      desc: 'Apoio logístico na campanha de doação de sangue: recepção dos doadores, organização de filas e suporte geral ao evento.',
+      date: 'Sexta, 11 Jul · 8h–17h',
+      vagas: '8 vagas',
+      local: 'UPA Central',
+      full: false
+    }
+  ];
+
+  function openModal(idx) {
+    const m = missions[idx];
+    document.getElementById('mTitle').textContent = m.title;
+    document.getElementById('mOrg').textContent   = '🏢 ' + m.org;
+    document.getElementById('mDesc').textContent  = m.desc;
+    document.getElementById('mDate').textContent  = m.date;
+    document.getElementById('mVagas').textContent = m.vagas;
+    document.getElementById('mLocal').textContent = m.local;
+    const tag = document.getElementById('mTag');
+    if (m.full) {
+      tag.textContent = '🔥 Quase Cheio';
+      tag.style.background = '#C8933A';
+    } else {
+      tag.textContent = '✅ Missão Ativa';
+      tag.style.background = '#2D5016';
+    }
+    document.getElementById('modalOverlay').classList.add('open');
   }
 
-  function openDrawer() {
-    document.getElementById('drawer').classList.add('open');
+  function closeModal(e) {
+    if (e.target === document.getElementById('modalOverlay'))
+      document.getElementById('modalOverlay').classList.remove('open');
   }
 
-  function closeDrawer() {
-    document.getElementById('drawer').classList.remove('open');
+  function closeModalBtn() {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+
+  function candidatar() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
   }
 </script>
 </body>
